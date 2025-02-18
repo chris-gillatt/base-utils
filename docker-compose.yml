@@ -1,0 +1,7 @@
+services:
+  app:
+    image: "s0lex/base-utils:${IMAGE_TAG:-latest}"
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
