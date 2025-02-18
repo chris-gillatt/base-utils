@@ -14,6 +14,3 @@ COPY motd /etc/motd
 
 # Ensure MOTD is displayed on shell start
 RUN echo 'cat /etc/motd' >> /etc/bashrc
-
-ENTRYPOINT ["/bin/bash"]
-CMD ["-c", "sleep infinity"]

@@ -1,9 +1,9 @@
-name: Build and Push Docker Image
+name: Build and Push Multi-Arch Docker Image
 
 on:
   push:
     branches:
-      - main 
+      - main  # Change this if using a different branch
 
 jobs:
   build-and-push:
@@ -22,14 +22,18 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Build and push Docker image
+      - name: Build and push multi-arch image
         run: |
           IMAGE_NAME=s0lex/base-utils
           COMMIT_SHA=$(git rev-parse --short HEAD)
           RUN_NUMBER=${{ github.run_number }}
 
-          # Build the image with multiple tags
-          docker build -t $IMAGE_NAME:latest -t $IMAGE_NAME:$COMMIT_SHA -t $IMAGE_NAME:$RUN_NUMBER .
+          # Create the Buildx builder instance (if not already created)
+          docker buildx create --use || true
 
-          # Push all tags in a single command
-          docker push --all-tags $IMAGE_NAME
+          # Build and push multi-arch images
+          docker buildx build --platform linux/amd64,linux/arm64 \
+            -t $IMAGE_NAME:latest \
+            -t $IMAGE_NAME:$COMMIT_SHA \
+            -t $IMAGE_NAME:$RUN_NUMBER \
+            --push .
