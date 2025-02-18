@@ -7,8 +7,7 @@ RUN dnf update -y -q \
     && rpm -qa --qf "%{NAME}\n" | sort > /etc/motd
 
 RUN wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq \
-    && chmod +x /usr/bin/yq \
-    && echo yq >> /etc/motd
+    && chmod +x /usr/bin/yq
 
 # Copy static MOTD file
 COPY motd /etc/motd
